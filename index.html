@@ -14,13 +14,13 @@
                         'soft-pink': '#ffe4e1',
                         'hot-pink': '#ff69b4',
                         'pastel-pink': '#ffd1dc',
-                        'creamy': '#fffafb' // A softer background
+                        'creamy': '#fffafb' 
                     },
                     fontFamily: {
                         'quicksand': ['Quicksand', 'sans-serif']
                     },
                     boxShadow: {
-                        // A custom, soft pink shadow for cards and buttons
+                       
                         'cute': '0 6px 16px 0 rgba(255, 105, 180, 0.25)',
                         'cute-hover': '0 8px 20px 0 rgba(255, 105, 180, 0.35)',
                     },
@@ -41,9 +41,9 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap');
         
-        /* Hide .admin-only by default */
+       
         .admin-only { display: none; }
-        /* Show .admin-only when .logged-in is on the body */
+        
         .logged-in .admin-only { display: block; }
 
         .kawaii { animation: float 3s ease-in-out infinite; }
@@ -52,10 +52,10 @@
             50% { transform: translateY(-8px); } 
         }
 
-        /* Custom focus ring style */
+      
         .pink-focus:focus {
-            border-color: #ff69b4; /* hot-pink */
-            box-shadow: 0 0 0 2px #ffb6c1; /* cute-pink */
+            border-color: #ff69b4; 
+            box-shadow: 0 0 0 2px #ffb6c1; 
             outline: none;
         }
 
@@ -78,10 +78,10 @@
                 <div class="flex items-center gap-4">
                     <span id="userStatus" class="text-gray-600 font-semibold">👋 Welcome, Guest!</span>
                     <button id="loginBtn" onclick="showLogin()" class="bg-cute-pink text-white px-5 py-2 rounded-full font-semibold shadow-cute hover:shadow-cute-hover hover:bg-hot-pink transform hover:-translate-y-0.5 transition-all">
-                        🔐 Admin Login
+                         Admin Login
                     </button>
                     <button id="logoutBtn" onclick="logout()" class="bg-hot-pink text-white px-5 py-2 rounded-full font-semibold shadow-cute hover:shadow-cute-hover hover:bg-pink-600 transform hover:-translate-y-0.5 transition-all admin-only" style="display: none;">
-                        👋 Logout
+                         Logout
                     </button>
                 </div>
             </div>
@@ -93,7 +93,7 @@
         <div id="adminPanel" class="bg-white rounded-xl shadow-sm p-6 mb-8 border border-pink-100 admin-only" style="display: none;">
             <h2 class="text-2xl font-bold text-cute-pink mb-4 flex items-center gap-2">✨ Admin Panel</h2>
             <button onclick="showNewPostForm()" class="bg-cute-pink text-white px-6 py-3 rounded-full font-semibold shadow-cute hover:shadow-cute-hover hover:bg-hot-pink transform hover:-translate-y-0.5 transition-all">
-                ➕ Write New Post
+                 Write New Post
             </button>
         </div>
 
@@ -103,10 +103,10 @@
             <textarea id="postContent" placeholder="Write your post here..." rows="6" class="w-full p-3 border border-pink-200 rounded-lg mb-4 pink-focus resize-none transition-all"></textarea>
             <div class="flex gap-3">
                 <button onclick="addPost()" class="bg-cute-pink text-white px-6 py-2 rounded-full font-semibold shadow-cute hover:shadow-cute-hover hover:bg-hot-pink transform hover:-translate-y-0.5 transition-all">
-                    💾 Publish
+                     Publish
                 </button>
                 <button onclick="hideNewPostForm()" class="bg-gray-200 text-gray-700 px-6 py-2 rounded-full font-semibold hover:bg-gray-300 transition-all">
-                    ❌ Cancel
+                     Cancel
                 </button>
             </div>
         </div>
@@ -122,7 +122,7 @@
 
     <div id="loginModal" class="fixed inset-0 bg-black bg-opacity-60 hidden items-center justify-center z-50 transition-opacity duration-300">
         <div class="bg-white rounded-xl p-8 max-w-md w-full mx-4 shadow-2xl border border-pink-100 animate-pop">
-            <h2 class="text-2xl font-bold text-hot-pink mb-6 text-center">🔐 Admin Login</h2>
+            <h2 class="text-2xl font-bold text-hot-pink mb-6 text-center">Admin Login</h2>
             <input type="text" id="username" placeholder="Username" class="w-full p-3 border border-pink-200 rounded-lg mb-4 pink-focus transition-all">
             <input type="password" id="password" placeholder="Password" class="w-full p-3 border border-pink-200 rounded-lg mb-6 pink-focus transition-all">
             <div class="flex gap-3">
@@ -133,19 +133,16 @@
                     Cancel
                 </button>
             </div>
-            <p class="text-center text-gray-400 text-sm mt-4">Hint: admin / pink123</p>
+            <p class="text-center text-gray-400 text-sm mt-4">Hint: cmon!</p>
         </div>
     </div>
 
  <script src="https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <script>
-    // 1. Get these from your Supabase Project Settings > API
-    // REPLACE THESE WITH YOUR KEYS!
+
     const SUPABASE_URL = 'https://phzsxzhkgstfcirzelzo.supabase.co';
     const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBoenN4emhrZ3N0ZmNpcnplbHpvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI5NzY1NTksImV4cCI6MjA3ODU1MjU1OX0.EABNIPJrHfhbeyMMYSgdR8-JctHseSISft3pxDr6VQk';
 
-    // 2. Initialize the Supabase client with error handling
-    // This *must* be defined before anything tries to use it.
     let supabase = null;
     
     try {
@@ -158,47 +155,41 @@
         console.warn('Failed to initialize Supabase:', error);
     }
 
-    // 3. Grab UI elements (safe to do now)
+
     const userStatus = document.getElementById('userStatus');
     const loginBtn = document.getElementById('loginBtn');
     const logoutBtn = document.getElementById('logoutBtn');
     const adminPanel = document.getElementById('adminPanel');
     const postsContainer = document.getElementById('postsContainer');
 
-    /*
-    * CORE AUTH: Replaces your old checkLoginStatus()
-    * This listener *uses* the 'supabase' variable, so it *must* come after it.
-    */
     if (supabase) {
         supabase.auth.onAuthStateChange((event, session) => {
             if (session) {
-                // User is logged in
+
                 document.body.classList.add('logged-in');
-                userStatus.innerHTML = '👑 <span class="hidden sm:inline">Logged in as</span> Admin';
+                userStatus.innerHTML = '<span class="hidden sm:inline">Logged in as</span> Admin';
                 loginBtn.style.display = 'none';
                 logoutBtn.style.display = 'block';
                 adminPanel.style.display = 'block';
             } else {
-                // User is logged out
+
                 document.body.classList.remove('logged-in');
-                userStatus.textContent = '👋 Welcome, Guest!';
+                userStatus.textContent = 'Welcome!';
                 loginBtn.style.display = 'block';
                 logoutBtn.style.display = 'none';
                 adminPanel.style.display = 'none';
                 hideNewPostForm();
             }
-            // Always reload posts, so admin buttons appear/disappear
+
             loadPosts();
         });
     } else {
-        // Fallback: show offline mode
-        userStatus.textContent = '👋 Welcome, Guest! (Offline Mode)';
+
+        userStatus.textContent = 'Welcome! (Offline Mode)';
         loadPosts();
     }
 
-    // --- Auth Functions (Rewritten) ---
-    // These are defined here, but called by HTML (onclick)
-    // They will correctly see the 'supabase' variable from this script's scope.
+
 
     function showLogin() {
         const modal = document.getElementById('loginModal');
@@ -248,7 +239,7 @@
         }
     }
 
-    // --- Post Functions (Rewritten) ---
+
 
     function showNewPostForm() {
         document.getElementById('newPostForm').style.display = 'block';
@@ -309,7 +300,7 @@
 
     async function loadPosts() {
         if (!supabase) {
-            // Offline mode - show placeholder
+
             postsContainer.innerHTML = `
                 <div class="text-center py-12">
                     <div class="text-6xl mb-4">🌸</div>
@@ -382,7 +373,7 @@
         }).join('');
     }
 
-    // Handle Enter key in login form
+
     document.getElementById('password').addEventListener('keypress', function(e) {
         if (e.key === 'Enter') login();
     });
@@ -390,7 +381,6 @@
         if (e.key === 'Enter') login();
     });
 
-    // Load posts on initial page load
     loadPosts();
 </script>
 </body>
