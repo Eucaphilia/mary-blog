@@ -141,7 +141,7 @@
 
     // 2. Initialize the Supabase client
     // This *must* be defined before anything tries to use it.
-    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
     // 3. Grab UI elements (safe to do now)
     const userStatus = document.getElementById('userStatus');
