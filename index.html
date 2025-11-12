@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>✨ Mary world ✨</title>
+    <title>✨ MARY WORLD ✨</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -132,16 +132,26 @@
         </div>
     </div>
 
- <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+ <script src="https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <script>
     // 1. Get these from your Supabase Project Settings > API
     // REPLACE THESE WITH YOUR KEYS!
     const SUPABASE_URL = 'https://phzsxzhkgstfcirzelzo.supabase.co';
     const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBoenN4emhrZ3N0ZmNpcnplbHpvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI5NzY1NTksImV4cCI6MjA3ODU1MjU1OX0.EABNIPJrHfhbeyMMYSgdR8-JctHseSISft3pxDr6VQk';
 
-    // 2. Initialize the Supabase client
+    // 2. Initialize the Supabase client with error handling
     // This *must* be defined before anything tries to use it.
-    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    let supabase = null;
+    
+    try {
+        if (window.supabase) {
+            supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        } else {
+            console.warn('Supabase library not loaded - running in offline mode');
+        }
+    } catch (error) {
+        console.warn('Failed to initialize Supabase:', error);
+    }
 
     // 3. Grab UI elements (safe to do now)
     const userStatus = document.getElementById('userStatus');
@@ -154,26 +164,32 @@
     * CORE AUTH: Replaces your old checkLoginStatus()
     * This listener *uses* the 'supabase' variable, so it *must* come after it.
     */
-    supabase.auth.onAuthStateChange((event, session) => {
-        if (session) {
-            // User is logged in
-            document.body.classList.add('logged-in');
-            userStatus.innerHTML = '👑 <span class="hidden sm:inline">Logged in as</span> Admin';
-            loginBtn.style.display = 'none';
-            logoutBtn.style.display = 'block';
-            adminPanel.style.display = 'block';
-        } else {
-            // User is logged out
-            document.body.classList.remove('logged-in');
-            userStatus.textContent = '👋 Welcome, Guest!';
-            loginBtn.style.display = 'block';
-            logoutBtn.style.display = 'none';
-            adminPanel.style.display = 'none';
-            hideNewPostForm();
-        }
-        // Always reload posts, so admin buttons appear/disappear
+    if (supabase) {
+        supabase.auth.onAuthStateChange((event, session) => {
+            if (session) {
+                // User is logged in
+                document.body.classList.add('logged-in');
+                userStatus.innerHTML = '👑 <span class="hidden sm:inline">Logged in as</span> Admin';
+                loginBtn.style.display = 'none';
+                logoutBtn.style.display = 'block';
+                adminPanel.style.display = 'block';
+            } else {
+                // User is logged out
+                document.body.classList.remove('logged-in');
+                userStatus.textContent = '👋 Welcome, Guest!';
+                loginBtn.style.display = 'block';
+                logoutBtn.style.display = 'none';
+                adminPanel.style.display = 'none';
+                hideNewPostForm();
+            }
+            // Always reload posts, so admin buttons appear/disappear
+            loadPosts();
+        });
+    } else {
+        // Fallback: show offline mode
+        userStatus.textContent = '👋 Welcome, Guest! (Offline Mode)';
         loadPosts();
-    });
+    }
 
     // --- Auth Functions (Rewritten) ---
     // These are defined here, but called by HTML (onclick)
@@ -198,6 +214,11 @@
         const email = document.getElementById('username').value;
         const password = document.getElementById('password').value;
         
+        if (!supabase) {
+            alert('❌ Authentication unavailable - Supabase not loaded');
+            return;
+        }
+        
         const { data, error } = await supabase.auth.signInWithPassword({
             email: email,
             password: password,
@@ -211,6 +232,11 @@
     }
 
     async function logout() {
+        if (!supabase) {
+            alert('❌ Authentication unavailable - Supabase not loaded');
+            return;
+        }
+        
         const { error } = await supabase.auth.signOut();
         if (error) {
             alert('Error logging out:', error.message);
@@ -239,6 +265,11 @@
             return;
         }
         
+        if (!supabase) {
+            alert('❌ Database unavailable - Supabase not loaded');
+            return;
+        }
+        
         const { data, error } = await supabase
             .from('posts')
             .insert([ { title: title, content: content } ]);
@@ -252,6 +283,11 @@
     }
 
     async function deletePost(id) {
+        if (!supabase) {
+            alert('❌ Database unavailable - Supabase not loaded');
+            return;
+        }
+        
         if (confirm('❌ Are you sure you want to delete this post?')) {
             const { error } = await supabase
                 .from('posts')
@@ -267,6 +303,18 @@
     }
 
     async function loadPosts() {
+        if (!supabase) {
+            // Offline mode - show placeholder
+            postsContainer.innerHTML = `
+                <div class="text-center py-12">
+                    <div class="text-6xl mb-4">🌸</div>
+                    <h2 class="text-3xl font-bold text-hot-pink">Offline Mode</h2>
+                    <p class="text-gray-500 mt-2">Database connection unavailable. Please check your internet connection and refresh the page.</p>
+                </div>
+            `;
+            return;
+        }
+        
         const { data: posts, error } = await supabase
             .from('posts')
             .select('*')
@@ -274,6 +322,13 @@
 
         if (error) {
             console.error('Error loading posts:', error);
+            postsContainer.innerHTML = `
+                <div class="text-center py-12">
+                    <div class="text-6xl mb-4">❌</div>
+                    <h2 class="text-3xl font-bold text-hot-pink">Database Error</h2>
+                    <p class="text-gray-500 mt-2">Could not load posts. Please refresh the page.</p>
+                </div>
+            `;
             return;
         }
         
